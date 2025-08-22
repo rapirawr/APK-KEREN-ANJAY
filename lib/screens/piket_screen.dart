@@ -9,11 +9,11 @@ class PiketScreen extends StatelessWidget {
     
     // Data dummy untuk jadwal piket
     final List<Map<String, String>> jadwalPiket = [
-      {'hari': 'Senin', 'nama': 'Budi, Siti, Anton'},
-      {'hari': 'Selasa', 'nama': 'Dewi, Fajar, Galih'},
-      {'hari': 'Rabu', 'nama': 'Hana, Iqbal, Juna'},
-      {'hari': 'Kamis', 'nama': 'Kevin, Linda, Mira'},
-      {'hari': 'Jumat', 'nama': 'Nadia, Oka, Putri'},
+      {'hari': 'Senin', 'nama': 'Cholel,Bagas,Icha,Vian'},
+      {'hari': 'Selasa', 'nama': 'Rehan,Tiar,Angel,Fiyo'},
+      {'hari': 'Rabu', 'nama': 'Dika,Fais,Ariel,Cece'},
+      {'hari': 'Kamis', 'nama': 'Imron,Radin,Developer Aplikasi ini,Refan'},
+      {'hari': 'Jumat', 'nama': 'Rafikhul,Ifan,Founder Aplikasi ini'},
     ];
 
     return Scaffold(

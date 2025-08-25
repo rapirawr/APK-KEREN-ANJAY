@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kelasku_app/screens/siswa_screen.dart';
 import 'package:provider/provider.dart';
 
 // --- PERUBAHAN 1: Tambahkan impor yang dibutuhkan ---
@@ -47,12 +48,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     themeProvider.themeMode == ThemeMode.dark
                         ? Icons.light_mode_rounded
                         : Icons.dark_mode_rounded,
-                    color: theme.colorScheme.onPrimary,
+                    color: theme.colorScheme.onPrimaryContainer,
                   ),
                 ),
                 IconButton(
                   icon: Icon(Icons.search_rounded,
-                      color: theme.colorScheme.onPrimary),
+                      color: theme.colorScheme.onPrimaryContainer),
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -155,15 +156,19 @@ class HomeContent extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Welcome',
-                    style: theme.textTheme.headlineLarge?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: theme.colorScheme.onBackground,
+                  Center(
+                    child: Text(
+                      'Welcome',
+                      style: theme.textTheme.headlineLarge?.copyWith(
+                        fontWeight: FontWeight.w800,
+                        color: theme.colorScheme.onBackground,
                       fontSize: 28,
                     ),
                   ),
+                ),
                   const SizedBox(height: 8),
+                Center(
+                  child:
                   Text(
                     'XI RPL 2 ANJAY😝',
                     style: theme.textTheme.bodyLarge?.copyWith(
@@ -171,6 +176,7 @@ class HomeContent extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
+                ),
                   const SizedBox(height: 32),
                 ],
               ),
@@ -255,6 +261,26 @@ class HomeContent extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (context) => const PiketScreen()));
+                  },
+                ),
+                    _buildFeatureCard(
+                  context,
+                  title: 'Siswa Siswi',
+                  icon: Icons.people_rounded,
+                  color: const Color(0xFF7A1CAC),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color.fromARGB(255, 62, 29, 80),
+                      Color(0xFF7A1CAC)
+                    ],
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SiswaScreen()));
                   },
                 ),
               ]),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kelasku_app/screens/siswa_screen.dart';
 import 'package:provider/provider.dart';
 import 'providers/profile_provider.dart';
 import 'providers/task_provider.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
               '/task': (context) => const TaskScreen(),
               '/piket': (context) => const PiketScreen(),
               '/profile': (context) => const ProfileScreen(),
+              '/siswa' : (context) => const SiswaScreen(),
             },
             onUnknownRoute: (settings) {
               return MaterialPageRoute(

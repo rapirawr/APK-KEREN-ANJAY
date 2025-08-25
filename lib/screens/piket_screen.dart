@@ -12,8 +12,8 @@ class PiketScreen extends StatelessWidget {
       {'hari': 'Senin', 'nama': 'Cholel,Bagas,Icha,Vian'},
       {'hari': 'Selasa', 'nama': 'Rehan,Tiar,Angel,Fiyo'},
       {'hari': 'Rabu', 'nama': 'Dika,Fais,Ariel,Cece'},
-      {'hari': 'Kamis', 'nama': 'Imron,Radin,Developer Aplikasi ini,Refan'},
-      {'hari': 'Jumat', 'nama': 'Rafikhul,Ifan,Founder Aplikasi ini'},
+      {'hari': 'Kamis', 'nama': 'Imron,Radin,Rafi,Refan'},
+      {'hari': 'Jumat', 'nama': 'Rafikhul,Ifan,Ebin'},
     ];
 
     return Scaffold(

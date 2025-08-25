@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,40 +17,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late TextEditingController _nameController;
   late TextEditingController _emailController;
   late TextEditingController _classController;
-  bool _isLoading = true;
+  bool _isInitialized = false;
 
   @override
   void initState() {
     super.initState();
-    // Inisialisasi controller di sini
     _nameController = TextEditingController();
     _emailController = TextEditingController();
     _classController = TextEditingController();
+    
+    // Initialize data setelah widget selesai dibangun
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeProfileData();
+    });
   }
 
-  // --- PERBAIKAN: Gunakan didChangeDependencies untuk memuat data dari Provider ---
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Hanya muat data sekali, saat pertama kali widget dibangun
-    if (_isLoading) {
-      _loadProfileData();
-    }
-  }
-
-  Future<void> _loadProfileData() async {
-    final profileProvider = Provider.of<ProfileProvider>(context, listen: false);
-    await profileProvider.loadProfile();
-
-    // Set controllers setelah data di-load
-    _nameController.text = profileProvider.profile.name;
-    _emailController.text = profileProvider.profile.email;
-    _classController.text = profileProvider.profile.userClass;
-
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
+  Future<void> _initializeProfileData() async {
+    if (_isInitialized) return;
+    
+    try {
+      final profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+      if (!mounted) return;
+      
+      // Jika profile belum diload, load dulu
+      if (!profileProvider.isLoaded) {
+        await profileProvider.loadProfile();
+      }
+      
+      // Set controllers dengan data yang sudah ada
+      if (mounted) {
+        _nameController.text = profileProvider.profile.name;
+        _emailController.text = profileProvider.profile.email;
+        _classController.text = profileProvider.profile.userClass;
+        
+        setState(() {
+          _isInitialized = true;
+        });
+      }
+    } catch (e) {
+      // Tetap set sebagai initialized meskipun ada error
+      if (mounted) {
+        setState(() {
+          _isInitialized = true;
+        });
+      }
     }
   }
 
@@ -86,30 +95,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
           profileProvider.updateProfileImage(imageFile, imagePath: pickedFile.path);
         }
         
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('Foto profil berhasil diubah'),
+              backgroundColor: Colors.green.shade700,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              margin: const EdgeInsets.all(16),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Foto profil berhasil diubah'),
-            backgroundColor: Colors.green.shade700,
+            content: Text('Gagal memilih gambar: ${e.toString()}'),
+            backgroundColor: Colors.red.shade700,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             margin: const EdgeInsets.all(16),
-            duration: const Duration(seconds: 2),
+            duration: const Duration(seconds: 3),
           ),
         );
       }
-    } catch (e) {
-      print('Error picking image: $e');
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Gagal memilih gambar: ${e.toString()}'),
-          backgroundColor: Colors.red.shade700,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          margin: const EdgeInsets.all(16),
-          duration: const Duration(seconds: 3),
-        ),
-      );
     }
   }
 
@@ -177,16 +188,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
       profileProvider.updateEmail(_emailController.text);
       profileProvider.updateClass(_classController.text);
       
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Profil berhasil disimpan'),
-          backgroundColor: Colors.green.shade700,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          margin: const EdgeInsets.all(16),
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Profil berhasil disimpan'),
+            backgroundColor: Colors.green.shade700,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            margin: const EdgeInsets.all(16),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
     }
   }
 
@@ -234,9 +247,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
-    if (_isLoading) {
+    // Tampilkan loading hanya jika belum initialized
+    if (!_isInitialized) {
       return Scaffold(
         backgroundColor: colorScheme.background,
+        appBar: AppBar(
+          title: const Text('Profil Saya'),
+          centerTitle: true,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          foregroundColor: colorScheme.onBackground,
+        ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

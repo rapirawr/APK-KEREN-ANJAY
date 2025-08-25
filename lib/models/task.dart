@@ -1,7 +1,7 @@
 class Task {
-  final String title;
-  final String subject;
-  final DateTime dueDate;
+  String title;
+  String subject;
+  DateTime dueDate;
   bool isCompleted;
 
   Task({
